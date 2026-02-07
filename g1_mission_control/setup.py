@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'navigation'
+package_name = 'g1_mission_control'
 
 setup(
     name=package_name,
@@ -15,13 +15,12 @@ setup(
     zip_safe=True,
     maintainer='Maintainer',
     maintainer_email='todo@example.com',
-    description='Walking and navigation logic for Unitree G1 robot',
+    description='State machine for coordinating the charger plugging mission',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'walking_controller = navigation.walking_controller:main',
-            'path_planner = navigation.path_planner:main',
+            'state_machine = g1_mission_control.state_machine:main',
         ],
     },
 )

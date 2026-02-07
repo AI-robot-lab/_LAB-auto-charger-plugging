@@ -15,7 +15,7 @@ def generate_launch_description():
     # Declare launch arguments
     config_file_arg = DeclareLaunchArgument(
         'config_file',
-        default_value='config/g1_params.yaml',
+        default_value='config/g1_charging_params.yaml',
         description='Path to the configuration file'
     )
     
@@ -31,7 +31,7 @@ def generate_launch_description():
     
     # Perception nodes
     charger_detector_node = Node(
-        package='perception',
+        package='g1_perception',
         executable='charger_detector',
         name='charger_detector',
         output='screen',
@@ -39,7 +39,7 @@ def generate_launch_description():
     )
     
     port_detector_node = Node(
-        package='perception',
+        package='g1_perception',
         executable='port_detector',
         name='port_detector',
         output='screen',
@@ -48,7 +48,7 @@ def generate_launch_description():
     
     # Navigation nodes
     walking_controller_node = Node(
-        package='navigation',
+        package='g1_navigation',
         executable='walking_controller',
         name='walking_controller',
         output='screen',
@@ -56,7 +56,7 @@ def generate_launch_description():
     )
     
     path_planner_node = Node(
-        package='navigation',
+        package='g1_navigation',
         executable='path_planner',
         name='path_planner',
         output='screen',
@@ -65,7 +65,7 @@ def generate_launch_description():
     
     # Manipulation nodes
     arm_controller_node = Node(
-        package='manipulation',
+        package='g1_manipulation',
         executable='arm_controller',
         name='arm_controller',
         output='screen',
@@ -73,7 +73,7 @@ def generate_launch_description():
     )
     
     gripper_controller_node = Node(
-        package='manipulation',
+        package='g1_manipulation',
         executable='gripper_controller',
         name='gripper_controller',
         output='screen',
@@ -82,7 +82,7 @@ def generate_launch_description():
     
     # Mission control node
     state_machine_node = Node(
-        package='mission_control',
+        package='g1_mission_control',
         executable='state_machine',
         name='state_machine',
         output='screen',
