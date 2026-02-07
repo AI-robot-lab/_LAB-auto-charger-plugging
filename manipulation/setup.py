@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'g1_navigation'
+package_name = 'manipulation'
 
 setup(
     name=package_name,
@@ -15,13 +15,13 @@ setup(
     zip_safe=True,
     maintainer='Maintainer',
     maintainer_email='todo@example.com',
-    description='Walking and navigation logic for Unitree G1 robot',
+    description='Arm IK control for grasping charger and inserting plug',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'walking_controller = g1_navigation.walking_controller:main',
-            'path_planner = g1_navigation.path_planner:main',
+            'arm_controller = manipulation.arm_controller:main',
+            'gripper_controller = manipulation.gripper_controller:main',
         ],
     },
 )

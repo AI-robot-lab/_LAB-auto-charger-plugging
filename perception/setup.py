@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'g1_manipulation'
+package_name = 'perception'
 
 setup(
     name=package_name,
@@ -15,13 +15,13 @@ setup(
     zip_safe=True,
     maintainer='Maintainer',
     maintainer_email='todo@example.com',
-    description='Arm IK control for grasping charger and inserting plug',
+    description='Vision system for detecting charger handle and car charging port',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'arm_controller = g1_manipulation.arm_controller:main',
-            'gripper_controller = g1_manipulation.gripper_controller:main',
+            'charger_detector = perception.charger_detector:main',
+            'port_detector = perception.port_detector:main',
         ],
     },
 )

@@ -54,14 +54,13 @@ state_machine:
   ros__parameters:
     auto_start: false
     # Charging station position (in map frame)
-    station_location_x: 0.0
-    station_location_y: 0.0
-    # Charger and port heights (meters)
-    charger_handle_height: 0.9
-    car_port_height: 0.8
+    station_position_x: 0.0
+    station_position_y: 0.0
+    station_position_z: 0.0
     # Car position (in map frame)
     car_position_x: 5.0
     car_position_y: 0.0
+    car_position_z: 0.0
     # Timeouts for each state (seconds)
     approach_station_timeout: 60.0
     grasp_charger_timeout: 30.0

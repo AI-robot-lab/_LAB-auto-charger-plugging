@@ -4,13 +4,10 @@ State Machine Node
 Coordinates the entire charger plugging mission using a finite state machine.
 
 States:
-1. IDLE: Wait for mission start
-2. NAV_TO_STATION: Navigate to the charging station
-3. ALIGN_WITH_CHARGER: Align with the charger handle
-4. GRASP_HANDLE: Grasp the charger handle
-5. NAV_TO_CAR: Navigate to the car with the charger
-6. ALIGN_WITH_PORT: Align with the car charging port
-7. INSERT_PLUG: Insert the charger plug into the car port
+1. APPROACH_STATION: Navigate to the charging station
+2. GRASP_CHARGER: Grasp the charger handle
+3. APPROACH_CAR: Navigate to the car with the charger
+4. INSERT_PLUG: Insert the charger plug into the car port
 """
 import rclpy
 from rclpy.node import Node
@@ -22,14 +19,12 @@ from enum import Enum
 class MissionState(Enum):
     """Enum for mission states."""
     IDLE = 0
-    NAV_TO_STATION = 1
-    ALIGN_WITH_CHARGER = 2
-    GRASP_HANDLE = 3
-    NAV_TO_CAR = 4
-    ALIGN_WITH_PORT = 5
-    INSERT_PLUG = 6
-    COMPLETED = 7
-    ERROR = 8
+    APPROACH_STATION = 1
+    GRASP_CHARGER = 2
+    APPROACH_CAR = 3
+    INSERT_PLUG = 4
+    COMPLETED = 5
+    ERROR = 6
 
 
 class StateMachine(Node):
@@ -40,21 +35,17 @@ class StateMachine(Node):
         
         # Declare parameters
         self.declare_parameter('auto_start', False)
-        self.declare_parameter('station_location_x', 0.0)
-        self.declare_parameter('station_location_y', 0.0)
+        self.declare_parameter('station_position_x', 0.0)
+        self.declare_parameter('station_position_y', 0.0)
         self.declare_parameter('car_position_x', 5.0)
         self.declare_parameter('car_position_y', 0.0)
-        self.declare_parameter('charger_handle_height', 0.9)
-        self.declare_parameter('car_port_height', 0.8)
         
         # Get parameters
         self.auto_start = self.get_parameter('auto_start').value
-        self.station_x = self.get_parameter('station_location_x').value
-        self.station_y = self.get_parameter('station_location_y').value
+        self.station_x = self.get_parameter('station_position_x').value
+        self.station_y = self.get_parameter('station_position_y').value
         self.car_x = self.get_parameter('car_position_x').value
         self.car_y = self.get_parameter('car_position_y').value
-        self.charger_handle_height = self.get_parameter('charger_handle_height').value
-        self.car_port_height = self.get_parameter('car_port_height').value
         
         # State
         self.current_state = MissionState.IDLE
@@ -145,7 +136,7 @@ class StateMachine(Node):
         """Start the charger plugging mission."""
         if self.current_state == MissionState.IDLE:
             self.get_logger().info('Starting charger plugging mission')
-            self.transition_to_state(MissionState.NAV_TO_STATION)
+            self.transition_to_state(MissionState.APPROACH_STATION)
         else:
             self.get_logger().warning(f'Cannot start mission, current state is {self.current_state.name}')
 
@@ -181,16 +172,12 @@ class StateMachine(Node):
         """Main state machine execution loop."""
         if self.current_state == MissionState.IDLE:
             self.handle_idle_state()
-        elif self.current_state == MissionState.NAV_TO_STATION:
-            self.handle_nav_to_station_state()
-        elif self.current_state == MissionState.ALIGN_WITH_CHARGER:
-            self.handle_align_with_charger_state()
-        elif self.current_state == MissionState.GRASP_HANDLE:
-            self.handle_grasp_handle_state()
-        elif self.current_state == MissionState.NAV_TO_CAR:
-            self.handle_nav_to_car_state()
-        elif self.current_state == MissionState.ALIGN_WITH_PORT:
-            self.handle_align_with_port_state()
+        elif self.current_state == MissionState.APPROACH_STATION:
+            self.handle_approach_station_state()
+        elif self.current_state == MissionState.GRASP_CHARGER:
+            self.handle_grasp_charger_state()
+        elif self.current_state == MissionState.APPROACH_CAR:
+            self.handle_approach_car_state()
         elif self.current_state == MissionState.INSERT_PLUG:
             self.handle_insert_plug_state()
         elif self.current_state == MissionState.COMPLETED:
@@ -203,8 +190,8 @@ class StateMachine(Node):
         # Wait for start command
         pass
 
-    def handle_nav_to_station_state(self):
-        """Handle NAV_TO_STATION state."""
+    def handle_approach_station_state(self):
+        """Handle APPROACH_STATION state."""
         # Send navigation goal to charging station
         goal = PoseStamped()
         goal.header.frame_id = 'map'
@@ -219,19 +206,10 @@ class StateMachine(Node):
         # TODO: Check if station reached
         # For now, transition based on navigation status
         if self.navigation_status == 'reached':
-            self.transition_to_state(MissionState.ALIGN_WITH_CHARGER)
+            self.transition_to_state(MissionState.GRASP_CHARGER)
 
-    def handle_align_with_charger_state(self):
-        """Handle ALIGN_WITH_CHARGER state."""
-        if self.charger_pose is None:
-            self.get_logger().warning('Waiting for charger detection')
-            return
-
-        self.get_logger().info('Aligning with charger handle')
-        self.transition_to_state(MissionState.GRASP_HANDLE)
-
-    def handle_grasp_handle_state(self):
-        """Handle GRASP_HANDLE state."""
+    def handle_grasp_charger_state(self):
+        """Handle GRASP_CHARGER state."""
         if self.charger_pose is None:
             self.get_logger().warning('Waiting for charger detection')
             return
@@ -248,10 +226,10 @@ class StateMachine(Node):
         
         # TODO: Verify successful grasp
         if self.is_grasping:
-            self.transition_to_state(MissionState.NAV_TO_CAR)
+            self.transition_to_state(MissionState.APPROACH_CAR)
 
-    def handle_nav_to_car_state(self):
-        """Handle NAV_TO_CAR state."""
+    def handle_approach_car_state(self):
+        """Handle APPROACH_CAR state."""
         # Send navigation goal to car
         goal = PoseStamped()
         goal.header.frame_id = 'map'
@@ -265,16 +243,7 @@ class StateMachine(Node):
         
         # TODO: Check if car reached
         if self.navigation_status == 'reached':
-            self.transition_to_state(MissionState.ALIGN_WITH_PORT)
-
-    def handle_align_with_port_state(self):
-        """Handle ALIGN_WITH_PORT state."""
-        if self.port_pose is None:
-            self.get_logger().warning('Waiting for port detection')
-            return
-
-        self.get_logger().info('Aligning with car charging port')
-        self.transition_to_state(MissionState.INSERT_PLUG)
+            self.transition_to_state(MissionState.INSERT_PLUG)
 
     def handle_insert_plug_state(self):
         """Handle INSERT_PLUG state."""

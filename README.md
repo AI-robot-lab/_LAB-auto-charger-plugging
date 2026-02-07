@@ -4,21 +4,18 @@ Complete software solution for the Unitree G1 EDU humanoid robot to autonomously
 
 ## Overview
 
-This ROS2-based system enables the Unitree G1 humanoid robot to perform autonomous electric vehicle charging. The robot executes a mission through seven main states:
+This ROS2-based system enables the Unitree G1 humanoid robot to perform autonomous electric vehicle charging. The robot executes a mission through four main states:
 
-1. **IDLE** - Wait for a mission start command
-2. **NAV_TO_STATION** - Navigate to the charging station
-3. **ALIGN_WITH_CHARGER** - Align the base with the charger handle
-4. **GRASP_HANDLE** - Detect and grasp the charger handle
-5. **NAV_TO_CAR** - Navigate to the vehicle while carrying the charger
-6. **ALIGN_WITH_PORT** - Align the arm with the charging port
-7. **INSERT_PLUG** - Precisely insert the charger plug into the vehicle's charging port
+1. **APPROACH_STATION** - Navigate to the charging station
+2. **GRASP_CHARGER** - Detect and grasp the charger handle
+3. **APPROACH_CAR** - Navigate to the vehicle while carrying the charger
+4. **INSERT_PLUG** - Precisely insert the charger plug into the vehicle's charging port
 
 ## System Architecture
 
 The system consists of four main ROS2 packages:
 
-### 1. g1_perception Package
+### 1. Perception Package
 Handles computer vision for detecting the charger handle and car charging port.
 
 **Nodes:**
@@ -29,7 +26,7 @@ Handles computer vision for detecting the charger handle and car charging port.
 - Publishes: `/perception/charger_pose`, `/perception/port_pose`
 - Subscribes: `/camera/image_raw`
 
-### 2. g1_navigation Package
+### 2. Navigation Package
 Manages walking logic and path planning for the humanoid robot.
 
 **Nodes:**
@@ -40,7 +37,7 @@ Manages walking logic and path planning for the humanoid robot.
 - Publishes: `/cmd_vel`, `/navigation/planned_path`
 - Subscribes: `/odom`, `/navigation/goal`
 
-### 3. g1_manipulation Package
+### 3. Manipulation Package
 Controls arm inverse kinematics for grasping and insertion operations.
 
 **Nodes:**
@@ -51,7 +48,7 @@ Controls arm inverse kinematics for grasping and insertion operations.
 - Publishes: `/right_arm/joint_trajectory`, `/right_gripper/position_command`
 - Subscribes: `/joint_states`, `/manipulation/right_arm/target_pose`
 
-### 4. g1_mission_control Package
+### 4. Mission Control Package
 Coordinates the entire mission using a finite state machine.
 
 **Nodes:**
@@ -137,7 +134,7 @@ ros2 topic echo /manipulation/right_gripper/grasp_status
 
 ## Configuration
 
-All parameters are configured in `config/g1_charging_params.yaml`. Key parameters include:
+All parameters are configured in `config/g1_params.yaml`. Key parameters include:
 
 - **Perception**: Camera topics, detection thresholds, model paths
 - **Navigation**: Velocity limits, position tolerances, planning algorithms
@@ -162,13 +159,13 @@ make
 sudo make install
 ```
 
-2. Configure network settings in `config/g1_charging_params.yaml`:
+2. Configure network settings in `config/g1_params.yaml`:
 ```yaml
-    unitree_sdk:
-      ros__parameters:
-        robot_ip: "192.168.123.10"     # Robot's IP address
-        local_ip: "192.168.123.100"    # Your computer's IP
-        sdk_port: 8080
+unitree_sdk:
+  ros__parameters:
+    robot_ip: "192.168.123.10"     # Robot's IP address
+    local_ip: "192.168.123.100"    # Your computer's IP
+    sdk_port: 8080
 ```
 
 ### SDK Integration Points
@@ -195,29 +192,29 @@ The SDK integration includes safety mechanisms:
 
 ```
 unitree-g1-auto-charger-plugging/
-├── g1_perception/
-│   ├── g1_perception/
+├── perception/
+│   ├── perception/
 │   │   ├── __init__.py
 │   │   ├── charger_detector.py
 │   │   └── port_detector.py
 │   ├── package.xml
 │   └── setup.py
-├── g1_navigation/
-│   ├── g1_navigation/
+├── navigation/
+│   ├── navigation/
 │   │   ├── __init__.py
 │   │   ├── walking_controller.py
 │   │   └── path_planner.py
 │   ├── package.xml
 │   └── setup.py
-├── g1_manipulation/
-│   ├── g1_manipulation/
+├── manipulation/
+│   ├── manipulation/
 │   │   ├── __init__.py
 │   │   ├── arm_controller.py
 │   │   └── gripper_controller.py
 │   ├── package.xml
 │   └── setup.py
-├── g1_mission_control/
-│   ├── g1_mission_control/
+├── mission_control/
+│   ├── mission_control/
 │   │   ├── __init__.py
 │   │   └── state_machine.py
 │   ├── package.xml
@@ -225,7 +222,6 @@ unitree-g1-auto-charger-plugging/
 ├── launch/
 │   └── bringup.launch.py
 ├── config/
-│   ├── g1_charging_params.yaml
 │   └── g1_params.yaml
 └── README.md
 ```
@@ -234,10 +230,10 @@ unitree-g1-auto-charger-plugging/
 
 To extend the system with custom behaviors:
 
-1. **New Perception Algorithms**: Add to g1_perception package
-2. **Alternative Path Planning**: Modify g1_navigation package
-3. **Advanced Manipulation**: Extend g1_manipulation package
-4. **Additional Mission States**: Update state machine in g1_mission_control
+1. **New Perception Algorithms**: Add to perception package
+2. **Alternative Path Planning**: Modify navigation package
+3. **Advanced Manipulation**: Extend manipulation package
+4. **Additional Mission States**: Update state machine in mission_control
 
 ## Troubleshooting
 

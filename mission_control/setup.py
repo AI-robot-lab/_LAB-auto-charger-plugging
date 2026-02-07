@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'g1_perception'
+package_name = 'mission_control'
 
 setup(
     name=package_name,
@@ -15,13 +15,12 @@ setup(
     zip_safe=True,
     maintainer='Maintainer',
     maintainer_email='todo@example.com',
-    description='Vision system for detecting charger handle and car charging port',
+    description='State machine for coordinating the charger plugging mission',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'charger_detector = g1_perception.charger_detector:main',
-            'port_detector = g1_perception.port_detector:main',
+            'state_machine = mission_control.state_machine:main',
         ],
     },
 )
