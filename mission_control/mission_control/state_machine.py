@@ -138,7 +138,7 @@ class StateMachine(Node):
             self.get_logger().info('Starting charger plugging mission')
             self.transition_to_state(MissionState.APPROACH_STATION)
         else:
-            self.get_logger().warn(f'Cannot start mission, current state is {self.current_state.name}')
+            self.get_logger().warning(f'Cannot start mission, current state is {self.current_state.name}')
 
     def charger_detected_callback(self, msg):
         """Handle charger detection."""
@@ -211,7 +211,7 @@ class StateMachine(Node):
     def handle_grasp_charger_state(self):
         """Handle GRASP_CHARGER state."""
         if self.charger_pose is None:
-            self.get_logger().warn('Waiting for charger detection')
+            self.get_logger().warning('Waiting for charger detection')
             return
         
         # Send arm target to charger position
@@ -248,7 +248,7 @@ class StateMachine(Node):
     def handle_insert_plug_state(self):
         """Handle INSERT_PLUG state."""
         if self.port_pose is None:
-            self.get_logger().warn('Waiting for port detection')
+            self.get_logger().warning('Waiting for port detection')
             return
         
         # Send arm target to port position for insertion

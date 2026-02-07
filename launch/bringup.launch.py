@@ -4,10 +4,9 @@ Bringup Launch File
 Launches all nodes for the Unitree G1 charger plugging system.
 """
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -16,11 +15,7 @@ def generate_launch_description():
     # Declare launch arguments
     config_file_arg = DeclareLaunchArgument(
         'config_file',
-        default_value=PathJoinSubstitution([
-            FindPackageShare('unitree_g1_charger_plugging'),
-            'config',
-            'g1_params.yaml'
-        ]),
+        default_value='config/g1_params.yaml',
         description='Path to the configuration file'
     )
     
