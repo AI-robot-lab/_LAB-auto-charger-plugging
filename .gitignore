@@ -1,6 +1,34 @@
+# ROS2 specific
+install/
+build/
+log/
+*.egg-info/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Compiled files
+*.o
+*.so
+*.exe
+
+# ROS1 legacy (keeping for reference)
 devel/
 logs/
-build/
 bin/
 lib/
 msg_gen/
@@ -34,15 +62,12 @@ CMakeLists.txt.user
 
 srv/_*.py
 *.pcd
-*.pyc
 qtcreator-*
 *.user
 
 /planning/cfg
 /planning/docs
 /planning/src
-
-*~
 
 # Emacs
 .#*
