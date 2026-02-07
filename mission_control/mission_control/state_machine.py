@@ -37,15 +37,19 @@ class StateMachine(Node):
         self.declare_parameter('auto_start', False)
         self.declare_parameter('station_position_x', 0.0)
         self.declare_parameter('station_position_y', 0.0)
+        self.declare_parameter('station_position_z', 0.0)
         self.declare_parameter('car_position_x', 5.0)
         self.declare_parameter('car_position_y', 0.0)
+        self.declare_parameter('car_position_z', 0.0)
         
         # Get parameters
         self.auto_start = self.get_parameter('auto_start').value
         self.station_x = self.get_parameter('station_position_x').value
         self.station_y = self.get_parameter('station_position_y').value
+        self.station_z = self.get_parameter('station_position_z').value
         self.car_x = self.get_parameter('car_position_x').value
         self.car_y = self.get_parameter('car_position_y').value
+        self.car_z = self.get_parameter('car_position_z').value
         
         # State
         self.current_state = MissionState.IDLE
