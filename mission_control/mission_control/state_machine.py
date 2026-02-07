@@ -202,6 +202,7 @@ class StateMachine(Node):
         goal.header.stamp = self.get_clock().now().to_msg()
         goal.pose.position.x = self.station_x
         goal.pose.position.y = self.station_y
+        goal.pose.position.z = self.station_z
         goal.pose.orientation.w = 1.0
         
         self.navigation_goal_pub.publish(goal)
@@ -240,6 +241,7 @@ class StateMachine(Node):
         goal.header.stamp = self.get_clock().now().to_msg()
         goal.pose.position.x = self.car_x
         goal.pose.position.y = self.car_y
+        goal.pose.position.z = self.car_z
         goal.pose.orientation.w = 1.0
         
         self.navigation_goal_pub.publish(goal)
