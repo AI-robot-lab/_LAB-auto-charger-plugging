@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'state_machine = mission_control.state_machine:main',
+            'state_machine_action_client = mission_control.state_machine_action_client:main',
         ],
     },
 )

@@ -13,7 +13,15 @@ This ROS2-based system enables the Unitree G1 humanoid robot to perform autonomo
 
 ## System Architecture
 
-The system consists of four main ROS2 packages:
+The system uses **ROS2 Actions** for robust, asynchronous communication between subsystems. It consists of five main ROS2 packages:
+
+### 0. Charging Interfaces Package
+Defines custom action interfaces for the system.
+
+**Actions:**
+- `Navigate.action` - Navigation goals with pose targets
+- `Manipulate.action` - Manipulation tasks (grasp_handle, insert_plug)
+- `Detect.action` - Object detection requests
 
 ### 1. Perception Package
 Handles computer vision for detecting the charger handle and car charging port.
@@ -21,6 +29,10 @@ Handles computer vision for detecting the charger handle and car charging port.
 **Nodes:**
 - `charger_detector` - Detects and localizes the charging handle
 - `port_detector` - Detects and localizes the car's charging port
+- `perception_action_server` - **Action Server** for object detection
+
+**Actions:**
+- Serves: `/detect` action (Detect.action)
 
 **Topics:**
 - Publishes: `/perception/charger_pose`, `/perception/port_pose`
@@ -32,6 +44,10 @@ Manages walking logic and path planning for the humanoid robot.
 **Nodes:**
 - `walking_controller` - Controls the robot's walking gait and movement
 - `path_planner` - Plans collision-free paths
+- `navigation_action_server` - **Action Server** for navigation tasks
+
+**Actions:**
+- Serves: `/navigate` action (Navigate.action)
 
 **Topics:**
 - Publishes: `/cmd_vel`, `/navigation/planned_path`
@@ -43,20 +59,35 @@ Controls arm inverse kinematics for grasping and insertion operations.
 **Nodes:**
 - `arm_controller` - Manages arm movements using IK
 - `gripper_controller` - Controls gripper open/close operations
+- `manipulation_action_server` - **Action Server** for manipulation tasks
+
+**Actions:**
+- Serves: `/manipulate` action (Manipulate.action)
 
 **Topics:**
 - Publishes: `/right_arm/joint_trajectory`, `/right_gripper/position_command`
 - Subscribes: `/joint_states`, `/manipulation/right_arm/target_pose`
 
 ### 4. Mission Control Package
-Coordinates the entire mission using a finite state machine.
+Coordinates the entire mission using a finite state machine acting as an **Action Client**.
 
 **Nodes:**
-- `state_machine` - Main coordinator that orchestrates all subsystems
+- `state_machine` - Original topic-based coordinator (deprecated)
+- `state_machine_action_client` - **Main coordinator using ROS2 Actions**
+
+**Mission Sequence:**
+1. `NAV_TO_STATION` - Navigate to charging station
+2. `DETECT_HANDLE` - Detect charger handle
+3. `MANIPULATE_GRASP` - Grasp the handle
+4. `NAV_TO_CAR` - Navigate to car
+5. `DETECT_PORT` - Detect charging port
+6. `MANIPULATE_INSERT` - Insert plug into port
+
+**Actions (as Client):**
+- Calls: `/navigate`, `/manipulate`, `/detect` actions
 
 **Topics:**
-- Publishes: `/mission_control/state`, `/navigation/goal`, `/manipulation/right_arm/target_pose`
-- Subscribes: `/perception/charger_pose`, `/perception/port_pose`, `/navigation/status`
+- Publishes: `/mission_control/state`
 
 ## Installation
 
@@ -92,6 +123,28 @@ source ~/unitree_ws/install/setup.bash
 
 ### Launching the System
 
+#### Using Action-Based Architecture (Recommended)
+
+To test the action-based system with mock servers:
+
+```bash
+# Terminal 1 - Start Navigation Action Server
+ros2 run navigation navigation_action_server
+
+# Terminal 2 - Start Manipulation Action Server
+ros2 run manipulation manipulation_action_server
+
+# Terminal 3 - Start Perception Action Server
+ros2 run perception perception_action_server
+
+# Terminal 4 - Start Mission Control (Action Client)
+ros2 run mission_control state_machine_action_client
+```
+
+The mission will automatically start and execute through all states.
+
+#### Legacy Launch (Topic-Based)
+
 Launch all nodes with default configuration:
 ```bash
 ros2 launch launch/bringup.launch.py
@@ -105,6 +158,36 @@ ros2 launch launch/bringup.launch.py auto_start:=true
 Launch with custom configuration:
 ```bash
 ros2 launch launch/bringup.launch.py config_file:=/path/to/custom_config.yaml
+```
+
+### Testing the Action-Based System
+
+Validate the architecture:
+```bash
+python3 validate_architecture.py
+```
+
+Monitor action servers:
+```bash
+# List available actions
+ros2 action list
+
+# Get info about a specific action
+ros2 action info /navigate
+ros2 action info /manipulate
+ros2 action info /detect
+```
+
+Send a test goal to an action server:
+```bash
+# Test navigation
+ros2 action send_goal /navigate charging_interfaces/action/Navigate "{target_pose: {position: {x: 2.0, y: 0.0, z: 0.0}, orientation: {w: 1.0}}}"
+
+# Test manipulation
+ros2 action send_goal /manipulate charging_interfaces/action/Manipulate "{task_type: 'grasp_handle'}"
+
+# Test detection
+ros2 action send_goal /detect charging_interfaces/action/Detect "{object_name: 'charger_handle'}"
 ```
 
 ### Starting the Mission
@@ -192,37 +275,49 @@ The SDK integration includes safety mechanisms:
 
 ```
 unitree-g1-auto-charger-plugging/
+├── charging_interfaces/         # NEW: Action interface definitions
+│   ├── action/
+│   │   ├── Navigate.action
+│   │   ├── Manipulate.action
+│   │   └── Detect.action
+│   ├── CMakeLists.txt
+│   └── package.xml
 ├── perception/
 │   ├── perception/
 │   │   ├── __init__.py
 │   │   ├── charger_detector.py
-│   │   └── port_detector.py
+│   │   ├── port_detector.py
+│   │   └── perception_action_server.py  # NEW: Action server
 │   ├── package.xml
 │   └── setup.py
 ├── navigation/
 │   ├── navigation/
 │   │   ├── __init__.py
 │   │   ├── walking_controller.py
-│   │   └── path_planner.py
+│   │   ├── path_planner.py
+│   │   └── navigation_action_server.py  # NEW: Action server
 │   ├── package.xml
 │   └── setup.py
 ├── manipulation/
 │   ├── manipulation/
 │   │   ├── __init__.py
 │   │   ├── arm_controller.py
-│   │   └── gripper_controller.py
+│   │   ├── gripper_controller.py
+│   │   └── manipulation_action_server.py  # NEW: Action server
 │   ├── package.xml
 │   └── setup.py
 ├── mission_control/
 │   ├── mission_control/
 │   │   ├── __init__.py
-│   │   └── state_machine.py
+│   │   ├── state_machine.py
+│   │   └── state_machine_action_client.py  # NEW: Action client
 │   ├── package.xml
 │   └── setup.py
 ├── launch/
 │   └── bringup.launch.py
 ├── config/
 │   └── g1_params.yaml
+├── validate_architecture.py     # NEW: Validation script
 └── README.md
 ```
 
@@ -233,7 +328,8 @@ To extend the system with custom behaviors:
 1. **New Perception Algorithms**: Add to perception package
 2. **Alternative Path Planning**: Modify navigation package
 3. **Advanced Manipulation**: Extend manipulation package
-4. **Additional Mission States**: Update state machine in mission_control
+4. **Additional Mission States**: Update state machine action client in mission_control
+5. **New Action Types**: Add action definitions to charging_interfaces package
 
 ## Troubleshooting
 

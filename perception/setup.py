@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'charger_detector = perception.charger_detector:main',
             'port_detector = perception.port_detector:main',
+            'perception_action_server = perception.perception_action_server:main',
         ],
     },
 )

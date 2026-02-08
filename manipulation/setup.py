@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'arm_controller = manipulation.arm_controller:main',
             'gripper_controller = manipulation.gripper_controller:main',
+            'manipulation_action_server = manipulation.manipulation_action_server:main',
         ],
     },
 )

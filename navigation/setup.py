@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'walking_controller = navigation.walking_controller:main',
             'path_planner = navigation.path_planner:main',
+            'navigation_action_server = navigation.navigation_action_server:main',
         ],
     },
 )
