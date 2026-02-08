@@ -21,7 +21,9 @@ def main():
     print("Validating ROS2 Action-based Architecture")
     print("=" * 70)
     
-    base_path = "/home/runner/work/unitree-g1-auto-charger-plugging/unitree-g1-auto-charger-plugging"
+    # Use relative path from script location
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    base_path = script_dir
     
     all_checks = []
     
