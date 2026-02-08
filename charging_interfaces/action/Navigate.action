@@ -1,0 +1,9 @@
+# Goal
+geometry_msgs/Pose target_pose
+---
+# Result
+bool success
+string message
+---
+# Feedback
+float32 distance_remaining

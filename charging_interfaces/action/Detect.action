@@ -1,0 +1,9 @@
+# Goal
+string object_name
+---
+# Result
+geometry_msgs/Pose detected_pose
+bool success
+---
+# Feedback
+int32 confidence

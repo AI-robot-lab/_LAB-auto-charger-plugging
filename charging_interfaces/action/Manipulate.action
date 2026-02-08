@@ -1,0 +1,8 @@
+# Goal
+string task_type  # e.g., 'grasp_handle', 'insert_plug'
+---
+# Result
+bool success
+---
+# Feedback
+string status
