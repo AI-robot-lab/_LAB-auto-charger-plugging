@@ -1,0 +1,51 @@
+name: ROS 2 CI
+
+# Co ten plik robi krok po kroku?
+  # 1. on: push: Działa jak strażnik. Jak tylko wyślesz zmiany, akcja startuje.
+  # 2. runs-on: ubuntu-22.04: GitHub "wynajmuje" Ci za darmo (dla publicznych repozytoriów) wirtualną maszynę z Linuxem.
+  # 3. setup-ros: Automatycznie instaluje ROS 2 Humble na tej maszynie. Nie musisz się martwić o ręczną konfigurację.
+  # 4. rosdep install: To bardzo ważne. Skrypt czyta Twoje pliki package.xml i instaluje brakujące biblioteki (np. OpenCV, sterowniki).
+  # 5. colcon build: Próbuje skompilować Twój kod. Jeśli w kodzie jest błąd (np. literówka w C++), ten krok się wyłoży, a Ty dostaniesz maila, że "Build Failed".
+
+# Kiedy ma się uruchomić?
+  # 1. Przy każdym wypchnięciu kodu na gałąź 'main'
+  # 2. Przy każdym Pull Requeście do 'main'
+  
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-22.04  # System operacyjny w chmurze (standard dla ROS 2 Humble)
+    
+    steps:
+      # 1. Pobierz Twój kod
+      - uses: actions/checkout@v3
+
+      # 2. Skonfiguruj środowisko ROS 2 (korzystamy z gotowej akcji)
+      - uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: humble
+
+      # 3. Zainstaluj zależności (to, co masz w package.xml)
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          rosdep update
+          rosdep install --from-paths src --ignore-src -y --rosdistro humble
+
+      # 4. Zbuduj projekt (kompilacja)
+      - name: Build workspace
+        run: colcon build --symlink-install
+
+      # 5. Uruchom testy (jeśli jakieś napisałeś)
+      - name: Run tests
+        run: colcon test
+
+      # 6. Pokaż wyniki testów (tylko jeśli były błędy)
+      - name: Show test results
+        if: failure()
+        run: colcon test-result --verbose
