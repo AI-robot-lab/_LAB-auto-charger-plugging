@@ -6,7 +6,7 @@ Successfully implemented the core ROS2 communication architecture using Actions 
 ## What Was Implemented
 
 ### 1. charging_interfaces Package (NEW)
-**Location:** `/charging_interfaces/`
+**Location:** `/src/charging_interfaces/`
 
 A new CMake-based ROS2 package containing action interface definitions:
 
@@ -34,7 +34,7 @@ A new CMake-based ROS2 package containing action interface definitions:
 - `action/Detect.action`
 
 ### 2. mission_control Package (UPDATED)
-**Location:** `/mission_control/`
+**Location:** `/src/mission_control/`
 
 #### New Implementation:
 - **state_machine_action_client.py** - Main State Machine acting as Action Client
@@ -59,7 +59,7 @@ A new CMake-based ROS2 package containing action interface definitions:
 - `setup.py` - Added `state_machine_action_client` entry point
 
 ### 3. navigation Package (UPDATED)
-**Location:** `/navigation/`
+**Location:** `/src/navigation/`
 
 #### New Implementation:
 - **navigation_action_server.py** - Mock Action Server for Navigation
@@ -76,7 +76,7 @@ A new CMake-based ROS2 package containing action interface definitions:
 - `setup.py` - Added `navigation_action_server` entry point
 
 ### 4. manipulation Package (UPDATED)
-**Location:** `/manipulation/`
+**Location:** `/src/manipulation/`
 
 #### New Implementation:
 - **manipulation_action_server.py** - Mock Action Server for Manipulation
@@ -93,7 +93,7 @@ A new CMake-based ROS2 package containing action interface definitions:
 - `setup.py` - Added `manipulation_action_server` entry point
 
 ### 5. perception Package (UPDATED)
-**Location:** `/perception/`
+**Location:** `/src/perception/`
 
 #### New Implementation:
 - **perception_action_server.py** - Mock Action Server for Detection
@@ -190,14 +190,14 @@ ros2 action send_goal /detect charging_interfaces/action/Detect "{object_name: '
 ## Files Created/Modified
 
 ### Created (9 files):
-1. charging_interfaces/package.xml
-2. charging_interfaces/CMakeLists.txt
-3. charging_interfaces/action/Navigate.action
-4. charging_interfaces/action/Manipulate.action
-5. charging_interfaces/action/Detect.action
-6. navigation/navigation/navigation_action_server.py
-7. manipulation/manipulation/manipulation_action_server.py
-8. perception/perception/perception_action_server.py
+1. src/charging_interfaces/package.xml
+2. src/charging_interfaces/CMakeLists.txt
+3. src/charging_interfaces/action/Navigate.action
+4. src/charging_interfaces/action/Manipulate.action
+5. src/charging_interfaces/action/Detect.action
+6. src/navigation/navigation/navigation_action_server.py
+7. src/manipulation/manipulation/manipulation_action_server.py
+8. src/perception/perception/perception_action_server.py
 9. mission_control/mission_control/state_machine_action_client.py
 
 ### Modified (9 files):

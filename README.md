@@ -275,44 +275,45 @@ The SDK integration includes safety mechanisms:
 
 ```
 unitree-g1-auto-charger-plugging/
-├── charging_interfaces/         # NEW: Action interface definitions
-│   ├── action/
-│   │   ├── Navigate.action
-│   │   ├── Manipulate.action
-│   │   └── Detect.action
-│   ├── CMakeLists.txt
-│   └── package.xml
-├── perception/
+├── src/
+│   ├── charging_interfaces/         # NEW: Action interface definitions
+│   │   ├── action/
+│   │   │   ├── Navigate.action
+│   │   │   ├── Manipulate.action
+│   │   │   └── Detect.action
+│   │   ├── CMakeLists.txt
+│   │   └── package.xml
 │   ├── perception/
-│   │   ├── __init__.py
-│   │   ├── charger_detector.py
-│   │   ├── port_detector.py
-│   │   └── perception_action_server.py  # NEW: Action server
-│   ├── package.xml
-│   └── setup.py
-├── navigation/
+│   │   ├── perception/
+│   │   │   ├── __init__.py
+│   │   │   ├── charger_detector.py
+│   │   │   ├── port_detector.py
+│   │   │   └── perception_action_server.py  # NEW: Action server
+│   │   ├── package.xml
+│   │   └── setup.py
 │   ├── navigation/
-│   │   ├── __init__.py
-│   │   ├── walking_controller.py
-│   │   ├── path_planner.py
-│   │   └── navigation_action_server.py  # NEW: Action server
-│   ├── package.xml
-│   └── setup.py
-├── manipulation/
+│   │   ├── navigation/
+│   │   │   ├── __init__.py
+│   │   │   ├── walking_controller.py
+│   │   │   ├── path_planner.py
+│   │   │   └── navigation_action_server.py  # NEW: Action server
+│   │   ├── package.xml
+│   │   └── setup.py
 │   ├── manipulation/
-│   │   ├── __init__.py
-│   │   ├── arm_controller.py
-│   │   ├── gripper_controller.py
-│   │   └── manipulation_action_server.py  # NEW: Action server
-│   ├── package.xml
-│   └── setup.py
-├── mission_control/
-│   ├── mission_control/
-│   │   ├── __init__.py
-│   │   ├── state_machine.py
-│   │   └── state_machine_action_client.py  # NEW: Action client
-│   ├── package.xml
-│   └── setup.py
+│   │   ├── manipulation/
+│   │   │   ├── __init__.py
+│   │   │   ├── arm_controller.py
+│   │   │   ├── gripper_controller.py
+│   │   │   └── manipulation_action_server.py  # NEW: Action server
+│   │   ├── package.xml
+│   │   └── setup.py
+│   └── mission_control/
+│       ├── mission_control/
+│       │   ├── __init__.py
+│       │   ├── state_machine.py
+│       │   └── state_machine_action_client.py  # NEW: Action client
+│       ├── package.xml
+│       └── setup.py
 ├── launch/
 │   └── bringup.launch.py
 ├── config/
