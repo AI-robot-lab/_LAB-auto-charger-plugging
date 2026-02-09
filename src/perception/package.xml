@@ -4,7 +4,7 @@
   <name>perception</name>
   <version>0.1.0</version>
   <description>Vision system for detecting charger handle and car charging port</description>
-  <maintainer email="todo@example.com">Maintainer</maintainer>
+  <maintainer email="tomz@prz.edu.pl">Tomek Żabiński</maintainer>
   <license>MIT</license>
 
   <depend>rclpy</depend>

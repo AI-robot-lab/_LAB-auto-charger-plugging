@@ -4,7 +4,7 @@
   <name>manipulation</name>
   <version>0.1.0</version>
   <description>Arm IK control for grasping charger and inserting plug</description>
-  <maintainer email="todo@example.com">Maintainer</maintainer>
+  <maintainer email="tomz@prz.edu.pl">Tomek Żabiński</maintainer>
   <license>MIT</license>
 
   <depend>rclpy</depend>

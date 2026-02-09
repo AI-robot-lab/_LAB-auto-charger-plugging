@@ -8,44 +8,69 @@ name: ROS 2 CI
   # 5. colcon build: Próbuje skompilować Twój kod. Jeśli w kodzie jest błąd (np. literówka w C++), ten krok się wyłoży, a Ty dostaniesz maila, że "Build Failed".
 
 # Kiedy ma się uruchomić?
-  # 1. Przy każdym wypchnięciu kodu na gałąź 'main'
-  # 2. Przy każdym Pull Requeście do 'main'
+  # 1. Przy każdym wypchnięciu kodu na gałąź 'main' lub 'master'
+  # 2. Przy każdym Pull Requeście do 'main' lub 'master'
   
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-22.04  # System operacyjny w chmurze (standard dla ROS 2 Humble)
     
     steps:
-      # 1. Pobierz Twój kod
-      - uses: actions/checkout@v3
+      # 1. Pobranie kodu z repozytorium
+      - name: checkout code
+        uses: actions/checkout@v4
 
       # 2. Skonfiguruj środowisko ROS 2 (korzystamy z gotowej akcji)
-      - uses: ros-tooling/setup-ros@v0.7
+      - name: setup ROS 2
+        uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: humble
 
+      # 2.1. Dodanie instalicji colon, bo brakowało do testów
+      #- name: install colcon
+      #  run: sudo apt-get update && sudo apt-get install -y python3-colcon-common-extensions     
+      
       # 3. Zainstaluj zależności (to, co masz w package.xml)
       - name: Install dependencies
         run: |
           sudo apt-get update
+          sudo apt-get install -y ros-humble-rclpy ros-humble-action-msgs
+          # Instalacja linterów (zazwyczaj są w setup-ros, ale dla pewności)
+          sudo apt-get install -y python3-ament-flake8 python3-ament-pep257 python3-ament-lint
+          sudo rosdep init || true
           rosdep update
           rosdep install --from-paths src --ignore-src -y --rosdistro humble
 
-      # 4. Zbuduj projekt (kompilacja)
-      - name: Build workspace
-        run: colcon build --symlink-install
+      # 4. Sprawdzanie stylu
+      - name: Lint check
+        run: |
+          source /opt/ros/humble/setup.bash
+          # Testujemy tylko styl w folderze src
+          ament_flake8 src/
+          ament_pep257 src/
 
-      # 5. Uruchom testy (jeśli jakieś napisałeś)
-      - name: Run tests
-        run: colcon test
+      # 5. Zbuduj projekt (kompilacja)
+      - name: Colcon build
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon build --symlink-install
+      
+      # 6. Uruchom testy (jeśli jakieś napisałeś)
+      - name: Colcon test
+        run: |
+          source /opt/ros/humble/setup.bash
+          [ -f install/setup.bash ] && source install/setup.bash
+          colcon test
 
       # 6. Pokaż wyniki testów (tylko jeśli były błędy)
       - name: Show test results
-        if: failure()
-        run: colcon test-result --verbose
+        if: failure() # Zmieniono z always(), aby widzieć raport tylko przy porażce
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon test-result --verbose

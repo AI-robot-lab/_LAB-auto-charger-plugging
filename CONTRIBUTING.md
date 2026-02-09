@@ -5,7 +5,7 @@ Cieszymy się, że chcesz dołożyć swoją cegiełkę do rozwoju naszych robot�
 
 ---
 
-## Model pracy z Git (Git Flow)
+## Model pracy z git (Git Flow)
 
 Stosujemy uproszczony model **Git Flow**. Wszystkie prace rozwojowe odbywają się na gałęziach tematycznych.
 
