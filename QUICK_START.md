@@ -127,16 +127,17 @@ source install/setup.bash
 ## Package Structure
 
 ```
-charging_interfaces/     # Action definitions
-├── action/
-│   ├── Navigate.action    # Navigation goals
-│   ├── Manipulate.action  # Manipulation tasks
-│   └── Detect.action      # Object detection
-
-navigation/              # Navigation action server
-manipulation/            # Manipulation action server  
-perception/              # Perception action server
-mission_control/         # State machine action client
+src/
+├── charging_interfaces/     # Action definitions
+│   ├── action/
+│   │   ├── Navigate.action    # Navigation goals
+│   │   ├── Manipulate.action  # Manipulation tasks
+│   │   └── Detect.action      # Object detection
+│
+├── navigation/              # Navigation action server
+├── manipulation/            # Manipulation action server  
+├── perception/              # Perception action server
+└── mission_control/         # State machine action client
 ```
 
 ## Key Features

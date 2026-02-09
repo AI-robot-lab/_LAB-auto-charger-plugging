@@ -23,7 +23,7 @@ def main():
     
     # Use relative path from script location
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    base_path = script_dir
+    base_path = os.path.join(script_dir, "src")
     
     all_checks = []
     
