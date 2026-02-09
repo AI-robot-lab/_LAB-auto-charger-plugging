@@ -30,6 +30,10 @@ jobs:
         with:
           required-ros-distributions: humble
 
+      #2.1. Dodanie instalicji colon, bo brakowało do testów
+      - name: Install colcon
+        run: sudo apt-get update && sudo apt-get install -y python3-colcon-common-extensions
+      
       # 3. Zainstaluj zależności (to, co masz w package.xml)
       - name: Install dependencies
         run: |
