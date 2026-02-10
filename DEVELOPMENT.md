@@ -22,7 +22,7 @@ Utwórz katalog roboczy (jeśli jeszcze go nie masz) i sklonuj kod:
 ```bash
 mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
-git clone https://github.com/AI-robot-lab/unitree-g1-charging-mission.git
+git clone https://github.com/AI-robot-lab/unitree-g1-auto-charger-plugging.git
 ```
 
 ### Krok 2: Instalacja zależności
@@ -58,32 +58,32 @@ source install/setup.bash
 
 Projekt jest podzielony na niezależne pakiety. Poniżej znajduje się opis ich odpowiedzialności oraz główne `nodes`.
 
-### 📦 `mission_control` (Mózg/ logika systemu)
+### `mission_control` (Mózg/ logika systemu)
 Zawiera główną maszynę stanów (**State Machine**), która zarządza przebiegiem misji.
-*   **Main Node:** `mission_manager_node.py`
+*   **Main Node:** `state_machine_action_client.py`
 *   **Funkcja:** Działa jako **Action Client**. Wysyła cele (Goals) do innych podsystemów.
 *   **Workflow:** `NAV_TO_STATION` $\to$ `DETECT_HANDLE` $\to$ `MANIPULATE_GRASP` $\to$ `NAV_TO_CAR`.
 
-### 📦 `perception` (Percepcja/ wizja komputerowa)
+### `perception` (Percepcja/ wizja komputerowa)
 Odpowiada za przetwarzanie obrazu z kamer RealSense/Unitree.
-*   **Main Node:** `charger_detector_node`
+*   **Main Node:** `perception_action_server.py`
 *   **Action Server:** Obsługuje `Detect.action`.
 *   **Input:** `/camera/color/image_raw`
 *   **Output:** Pozycja uchwytu `geometry_msgs/Pose`.
 
-### 📦 `navigation` (Nawigacja/ przemieszczanie się)
+### `navigation` (Nawigacja/ przemieszczanie się)
 Odpowiada za przemieszczanie się robota po laboratorium.
-*   **Main Node:** `nav_commander_node`
+*   **Main Node:** `navigation_action_server.py`
 *   **Action Server:** Obsługuje `Navigate.action`.
 *   **Integracja:** Wykorzystuje Unitree SDK do wysyłania komend prędkości (`cmd_vel`).
 
-### 📦 `manipulation` (Manipulacja/ ruchy ramion)
+### `manipulation` (Manipulacja/ ruchy ramion)
 Odpowiada za planowanie ruchu rąk i chwytanie.
-*   **Main Node:** `arm_controller_node`
+*   **Main Node:** `manipulation_action_server.py`
 *   **Action Server:** Obsługuje `Manipulate.action`.
 *   **Logika:** Oblicza IK (Inverse Kinematics) dla zadania `grasp_handle` lub `insert_plug`.
 
-### 📦 `charging_interfaces`
+### `charging_interfaces`
 Pakiet zawierający wyłącznie definicje wiadomości `.msg` i akcji `.action`.
 *   `Navigate.action`
 *   `Manipulate.action`
@@ -96,17 +96,20 @@ Pakiet zawierający wyłącznie definicje wiadomości `.msg` i akcji `.action`.
 ### Tryb symulacji (Mock Mode)
 Możesz uruchomić system bez fizycznego robota. W tym trybie węzły `navigation` i `manipulation` symulują działanie (czekają 2 sekundy i zwracają `success`).
 
-1. Otwórz nowy terminal i uruchom główny plik `launch`:
+1. Uruchom serwery akcji oraz klienta misji w osobnych terminalach:
    ```bash
-   ros2 launch mission_control system_bringup.launch.py use_sim_time:=true
+   ros2 run navigation navigation_action_server
+   ros2 run manipulation manipulation_action_server
+   ros2 run perception perception_action_server
+   ros2 run mission_control state_machine_action_client
    ```
 
 2. Powinieneś zobaczyć w logach konsoli sekwencję:
    ```text
-   [INFO] [mission_manager]: State: NAV_TO_STATION
-   [INFO] [navigation_server]: Received goal: Station_A. Moving...
-   [INFO] [navigation_server]: Arrived at destination.
-   [INFO] [mission_manager]: Transitioning to DETECT_HANDLE...
+   [INFO] [state_machine_action_client]: State: NAV_TO_STATION
+   [INFO] [navigation_action_server]: Received navigation goal to pose: [2.0, 0.0, 0.0]
+   [INFO] [navigation_action_server]: Navigation goal succeeded
+   [INFO] [state_machine_action_client]: State: DETECT_HANDLE
    ```
 
 ### Tryb rzeczywisty (Real Robot)
@@ -119,7 +122,7 @@ Możesz uruchomić system bez fizycznego robota. W tym trybie węzły `navigatio
    ```
 3. W osobnym terminalu uruchom logikę misji:
    ```bash
-   ros2 launch mission_control system_bringup.launch.py use_sim_time:=false
+   ros2 run mission_control state_machine_action_client
    ```
 
 ---
@@ -143,4 +146,4 @@ Użyj narzędzia `rqt_graph`, aby zweryfikować połączenia między węzłami i
 ```bash
 rqt_graph
 ```
-Powinieneś widzieć `mission_manager` połączony liniami akcji z węzłami `perception`, `navigation` i `manipulation`.
+Powinieneś widzieć `state_machine_action_client` połączony liniami akcji z węzłami `perception`, `navigation` i `manipulation`.

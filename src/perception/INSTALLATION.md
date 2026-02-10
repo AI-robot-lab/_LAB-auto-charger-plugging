@@ -189,19 +189,19 @@ Solutions:
 ### "No depth data"
 
 Checklist:
-- ✓ Camera publishing to `/camera/aligned_depth_to_color/image_raw`
-- ✓ Depth alignment enabled in camera launch
-- ✓ camera_info topic publishing intrinsics
-- ✓ Depth values in valid range (0.1m - 10m)
+- Camera publishing to `/camera/aligned_depth_to_color/image_raw`
+- Depth alignment enabled in camera launch
+- camera_info topic publishing intrinsics
+- Depth values in valid range (0.1m - 10m)
 
 ### "No detections"
 
 Checklist:
-- ✓ Camera topics configured correctly
-- ✓ Objects in camera field of view
-- ✓ Sufficient lighting
-- ✓ Confidence threshold not too high
-- ✓ Check debug image for bounding boxes
+- Camera topics configured correctly
+- Objects in camera field of view
+- Sufficient lighting
+- Confidence threshold not too high
+- Check debug image for bounding boxes
 
 ## Integration with Mission Control
 
@@ -251,13 +251,13 @@ Either strategy works:
 
 ## Next Steps
 
-1. ✓ Install and test perception system
-2. ✓ Configure camera parameters
-3. ✓ Tune detection thresholds
-4. ✓ Test LIDAR safety distances
-5. ✓ Integrate with full mission system
-6. ✓ Deploy to Unitree G1 robot
-7. ✓ Test in target environment
+1. Install and test perception system
+2. Configure camera parameters
+3. Tune detection thresholds
+4. Test LIDAR safety distances
+5. Integrate with full mission system
+6. Deploy to Unitree G1 robot
+7. Test in target environment
 
 ## Documentation
 

@@ -103,7 +103,7 @@ Run the validation script to verify the architecture:
 python3 validate_architecture.py
 ```
 
-Expected: All 10 checks should pass ✓
+Expected: All 10 checks should pass
 
 ## Troubleshooting
 
@@ -142,11 +142,11 @@ src/
 
 ## Key Features
 
-- ✅ Asynchronous action-based communication
-- ✅ Feedback monitoring during execution
-- ✅ Automatic state transitions
-- ✅ Mock implementations for testing without hardware
-- ✅ No "g1_" prefixes in package names
+- Asynchronous action-based communication
+- Feedback monitoring during execution
+- Automatic state transitions
+- Mock implementations for testing without hardware
+- No "g1_" prefixes in package names
 
 ## Next Steps
 

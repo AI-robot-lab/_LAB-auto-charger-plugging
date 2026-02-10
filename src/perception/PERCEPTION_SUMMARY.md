@@ -147,9 +147,9 @@ Perception Launch Configuration
 Config file: /path/to/perception_params.yaml
 Detection mode: mediapipe
 ======================================================================
-✓ LIDAR Safety Node: ENABLED
-✗ YOLOv8 Detector: DISABLED
-✓ MediaPipe Detector: ENABLED (CPU-friendly)
+LIDAR Safety Node: ENABLED
+YOLOv8 Detector: DISABLED
+MediaPipe Detector: ENABLED (CPU-friendly)
 ======================================================================
 ```
 
@@ -479,11 +479,11 @@ pip install mediapipe --break-system-packages
 
 The perception package has been successfully enhanced with:
 
-✅ **LIDAR Safety Monitoring** - Real-time obstacle detection with emergency stop
-✅ **Dual Vision Strategies** - Choice between GPU-heavy YOLO and CPU-friendly MediaPipe
-✅ **3D Object Localization** - Accurate position estimation using depth fusion
-✅ **Flexible Configuration** - Easy switching between detection modes
-✅ **Conditional Launch System** - Intelligent node management
-✅ **Comprehensive Documentation** - Detailed usage and troubleshooting guides
+**LIDAR Safety Monitoring** - Real-time obstacle detection with emergency stop
+**Dual Vision Strategies** - Choice between GPU-heavy YOLO and CPU-friendly MediaPipe
+**3D Object Localization** - Accurate position estimation using depth fusion
+**Flexible Configuration** - Easy switching between detection modes
+**Conditional Launch System** - Intelligent node management
+**Comprehensive Documentation** - Detailed usage and troubleshooting guides
 
 The system is production-ready for the Unitree G1 auto-charging mission and provides a solid foundation for future perception enhancements.

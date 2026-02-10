@@ -52,7 +52,7 @@ def launch_setup(context, *args, **kwargs):
         parameters=[config_file]
     )
     nodes_to_launch.append(lidar_safety_node)
-    print("✓ LIDAR Safety Node: ENABLED")
+    print("LIDAR Safety Node: ENABLED")
     
     # 2. Conditionally launch detection node
     if detection_mode == 'yolo':
@@ -64,8 +64,8 @@ def launch_setup(context, *args, **kwargs):
             parameters=[config_file]
         )
         nodes_to_launch.append(yolo_node)
-        print("✓ YOLOv8 Detector: ENABLED (GPU-heavy)")
-        print("✗ MediaPipe Detector: DISABLED")
+        print("YOLOv8 Detector: ENABLED (GPU-heavy)")
+        print("MediaPipe Detector: DISABLED")
         
     elif detection_mode == 'mediapipe':
         mediapipe_node = Node(
@@ -76,8 +76,8 @@ def launch_setup(context, *args, **kwargs):
             parameters=[config_file]
         )
         nodes_to_launch.append(mediapipe_node)
-        print("✗ YOLOv8 Detector: DISABLED")
-        print("✓ MediaPipe Detector: ENABLED (CPU-friendly)")
+        print("YOLOv8 Detector: DISABLED")
+        print("MediaPipe Detector: ENABLED (CPU-friendly)")
         
     else:
         print(f"WARNING: Unknown detection mode '{detection_mode}'")
