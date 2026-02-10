@@ -9,10 +9,10 @@ import sys
 def check_file_exists(filepath, description):
     """Check if a file exists."""
     if os.path.exists(filepath):
-        print(f"OK: {description}: {filepath}")
+        print(f"✓ {description}: {filepath}")
         return True
     else:
-        print(f"ERROR: {description}: {filepath} NOT FOUND")
+        print(f"✗ {description}: {filepath} NOT FOUND")
         return False
 
 def main():
@@ -57,10 +57,10 @@ def main():
     prefix_check = True
     for pkg in packages:
         if "g1_" in pkg:
-            print(f"ERROR: Package name contains 'g1_' prefix: {pkg}")
+            print(f"✗ Package name contains 'g1_' prefix: {pkg}")
             prefix_check = False
     if prefix_check:
-        print("OK: No 'g1_' prefixes found in package names")
+        print("✓ No 'g1_' prefixes found in package names")
     all_checks.append(prefix_check)
     
     # Summary
@@ -72,10 +72,10 @@ def main():
     print(f"Passed: {passed}/{total} checks")
     
     if passed == total:
-        print("\nAll validation checks PASSED!")
+        print("\n✓ All validation checks PASSED!")
         return 0
     else:
-        print(f"\n{total - passed} validation check(s) FAILED!")
+        print(f"\n✗ {total - passed} validation check(s) FAILED!")
         return 1
 
 if __name__ == "__main__":

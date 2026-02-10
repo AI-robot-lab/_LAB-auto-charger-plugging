@@ -58,32 +58,32 @@ source install/setup.bash
 
 Projekt jest podzielony na niezależne pakiety. Poniżej znajduje się opis ich odpowiedzialności oraz główne `nodes`.
 
-### `mission_control` (Mózg/ logika systemu)
+### 📦 `mission_control` (Mózg/ logika systemu)
 Zawiera główną maszynę stanów (**State Machine**), która zarządza przebiegiem misji.
 *   **Main Node:** `state_machine_action_client.py`
 *   **Funkcja:** Działa jako **Action Client**. Wysyła cele (Goals) do innych podsystemów.
 *   **Workflow:** `NAV_TO_STATION` $\to$ `DETECT_HANDLE` $\to$ `MANIPULATE_GRASP` $\to$ `NAV_TO_CAR`.
 
-### `perception` (Percepcja/ wizja komputerowa)
+### 📦 `perception` (Percepcja/ wizja komputerowa)
 Odpowiada za przetwarzanie obrazu z kamer RealSense/Unitree.
 *   **Main Node:** `perception_action_server.py`
 *   **Action Server:** Obsługuje `Detect.action`.
 *   **Input:** `/camera/color/image_raw`
 *   **Output:** Pozycja uchwytu `geometry_msgs/Pose`.
 
-### `navigation` (Nawigacja/ przemieszczanie się)
+### 📦 `navigation` (Nawigacja/ przemieszczanie się)
 Odpowiada za przemieszczanie się robota po laboratorium.
 *   **Main Node:** `navigation_action_server.py`
 *   **Action Server:** Obsługuje `Navigate.action`.
 *   **Integracja:** Wykorzystuje Unitree SDK do wysyłania komend prędkości (`cmd_vel`).
 
-### `manipulation` (Manipulacja/ ruchy ramion)
+### 📦 `manipulation` (Manipulacja/ ruchy ramion)
 Odpowiada za planowanie ruchu rąk i chwytanie.
 *   **Main Node:** `manipulation_action_server.py`
 *   **Action Server:** Obsługuje `Manipulate.action`.
 *   **Logika:** Oblicza IK (Inverse Kinematics) dla zadania `grasp_handle` lub `insert_plug`.
 
-### `charging_interfaces`
+### 📦 `charging_interfaces`
 Pakiet zawierający wyłącznie definicje wiadomości `.msg` i akcji `.action`.
 *   `Navigate.action`
 *   `Manipulate.action`
