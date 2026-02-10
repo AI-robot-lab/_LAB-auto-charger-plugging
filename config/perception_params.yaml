@@ -1,0 +1,60 @@
+# Perception Package Configuration
+# Parameters for LIDAR safety, YOLOv8, and MediaPipe detection
+
+# Detection mode selection
+detection_mode: 'mediapipe'  # Options: 'yolo' or 'mediapipe'
+
+# LIDAR Safety Node Parameters
+lidar_safety_node:
+  ros__parameters:
+    scan_topic: "/scan"
+    safety_distance: 0.5  # meters - obstacle detection threshold
+    front_arc_degrees: 60.0  # degrees - arc to monitor in front
+    check_rate: 10.0  # Hz - safety check frequency
+
+# YOLOv8 Detector Parameters (GPU-heavy, high accuracy)
+yolo_detector_node:
+  ros__parameters:
+    rgb_topic: "/camera/color/image_raw"
+    depth_topic: "/camera/aligned_depth_to_color/image_raw"
+    camera_info_topic: "/camera/color/camera_info"
+    model_path: "yolov8n.pt"  # Options: yolov8n.pt, yolov8s.pt, yolov8m.pt, yolov8l.pt, yolov8x.pt
+    confidence_threshold: 0.5
+    use_gpu: true
+    target_classes: ['charger_handle', 'car_port', 'person', 'hand']
+
+# MediaPipe Detector Parameters (CPU-friendly, efficient)
+mediapipe_detector_node:
+  ros__parameters:
+    rgb_topic: "/camera/color/image_raw"
+    depth_topic: "/camera/aligned_depth_to_color/image_raw"
+    camera_info_topic: "/camera/color/camera_info"
+    model_path: "efficientdet_lite0.tflite"  # Default MediaPipe model
+    confidence_threshold: 0.5
+    max_results: 5
+
+# Original Detector Nodes (for backwards compatibility)
+charger_detector:
+  ros__parameters:
+    camera_topic: "/camera/color/image_raw"
+    detection_threshold: 0.7
+    use_gpu: true
+    model_path: "models/charger_detector.onnx"
+
+port_detector:
+  ros__parameters:
+    camera_topic: "/camera/color/image_raw"
+    detection_threshold: 0.7
+    use_gpu: true
+    model_path: "models/port_detector.onnx"
+
+# Camera Configuration
+camera:
+  ros__parameters:
+    # RealSense D435i typical specs
+    width: 640
+    height: 480
+    fps: 30
+    # Depth range
+    min_depth: 0.1  # meters
+    max_depth: 10.0  # meters

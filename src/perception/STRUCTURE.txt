@@ -1,0 +1,143 @@
+perception_enhancement/
+├── INSTALLATION.md                              [NEW - Quick start guide]
+├── STRUCTURE.txt                                [NEW - This file]
+│
+├── src/
+│   └── perception/                              [ENHANCED PACKAGE]
+│       ├── perception/
+│       │   ├── __init__.py
+│       │   ├── charger_detector.py              [Original]
+│       │   ├── port_detector.py                 [Original]
+│       │   ├── perception_action_server.py      [Original]
+│       │   ├── lidar_safety_node.py             [NEW - LIDAR safety monitoring]
+│       │   ├── yolo_detector_node.py            [NEW - YOLOv8 GPU detection]
+│       │   └── mediapipe_detector_node.py       [NEW - MediaPipe CPU detection]
+│       ├── resource/
+│       │   └── perception                       [ROS2 marker file]
+│       ├── package.xml                          [UPDATED - Added dependencies]
+│       ├── setup.py                             [UPDATED - Added entry points]
+│       └── setup.cfg                            [Standard config]
+│
+├── config/
+│   └── perception_params.yaml                   [NEW - Comprehensive config]
+│
+├── launch/
+│   └── perception.launch.py                     [NEW - Conditional launch]
+│
+└── docs/
+    ├── PERCEPTION_README.md                     [NEW - Detailed documentation]
+    └── PERCEPTION_ENHANCEMENT_SUMMARY.md        [NEW - Implementation summary]
+
+═══════════════════════════════════════════════════════════════════════════════
+
+KEY FEATURES:
+
+1. LIDAR Safety Node (lidar_safety_node.py)
+   ✓ Real-time obstacle detection
+   ✓ Emergency stop triggering
+   ✓ Configurable safety zone
+   ✓ 10 Hz monitoring rate
+
+2. YOLOv8 Detector (yolo_detector_node.py)
+   ✓ GPU-accelerated detection
+   ✓ Multiple model sizes (nano to extra-large)
+   ✓ RGB-Depth synchronization
+   ✓ 3D pose estimation
+   ✓ Debug visualization
+
+3. MediaPipe Detector (mediapipe_detector_node.py)
+   ✓ CPU-friendly alternative
+   ✓ Low power consumption
+   ✓ Suitable for embedded systems
+   ✓ Same 3D mapping as YOLO
+   ✓ Fallback color detection
+
+4. Conditional Launch System
+   ✓ Choose YOLO or MediaPipe at launch
+   ✓ LIDAR safety always enabled
+   ✓ Clear console output
+   ✓ Flexible configuration
+
+5. Comprehensive Configuration
+   ✓ Single YAML file
+   ✓ All parameters documented
+   ✓ Easy mode switching
+   ✓ Camera topic configuration
+
+═══════════════════════════════════════════════════════════════════════════════
+
+INTEGRATION INSTRUCTIONS:
+
+1. Copy src/perception/ to your workspace src/ directory
+   - Will overwrite existing perception package
+   - Backward compatible with existing nodes
+
+2. Copy config/perception_params.yaml to your config/ directory
+   - Or merge with existing config/g1_params.yaml
+
+3. Copy launch/perception.launch.py to your launch/ directory
+
+4. Build and source:
+   cd ~/your_workspace
+   colcon build --packages-select perception
+   source install/setup.bash
+
+5. Test:
+   ros2 launch launch/perception.launch.py
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DEPENDENCIES:
+
+ROS2 Packages (apt install):
+  ✓ ros-humble-cv-bridge
+  ✓ ros-humble-image-transport
+  ✓ ros-humble-message-filters
+  ✓ python3-opencv
+  ✓ python3-numpy
+
+Python Packages (pip install):
+  ✓ ultralytics (for YOLO, optional)
+  ✓ mediapipe (for MediaPipe, optional)
+
+Camera Hardware:
+  ✓ Intel RealSense D435i/D455
+  ✓ Unitree Integrated Camera
+  ✓ Any RGB-D camera with aligned depth
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TOPICS:
+
+Subscribed:
+  /scan                                    LaserScan
+  /camera/color/image_raw                  Image
+  /camera/aligned_depth_to_color/image_raw Image
+  /camera/color/camera_info                CameraInfo
+
+Published:
+  /safety/emergency_stop                   Bool
+  /perception/charger_pose                 PoseStamped
+  /perception/port_pose                    PoseStamped
+  /perception/debug_image                  Image
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODES:
+
+1. lidar_safety_node
+   - Package: perception
+   - Executable: lidar_safety_node
+   - Purpose: Obstacle detection and emergency stop
+
+2. yolo_detector_node
+   - Package: perception
+   - Executable: yolo_detector_node
+   - Purpose: GPU-accelerated object detection
+
+3. mediapipe_detector_node
+   - Package: perception
+   - Executable: mediapipe_detector_node
+   - Purpose: CPU-friendly object detection
+
+═══════════════════════════════════════════════════════════════════════════════

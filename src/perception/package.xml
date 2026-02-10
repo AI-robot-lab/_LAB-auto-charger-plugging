@@ -4,7 +4,7 @@
   <name>perception</name>
   <version>0.1.0</version>
   <description>Vision system for detecting charger handle and car charging port</description>
-  <maintainer email="tomz@prz.edu.pl">Tomek Żabiński</maintainer>
+  <maintainer email="todo@example.com">Maintainer</maintainer>
   <license>MIT</license>
 
   <depend>rclpy</depend>
@@ -17,6 +17,14 @@
   <depend>tf2_geometry_msgs</depend>
   <depend>rclpy_action</depend>
   <depend>charging_interfaces</depend>
+  <depend>message_filters</depend>
+
+  <!-- Python dependencies for vision -->
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  
+  <!-- Optional: YOLOv8 (install separately: pip install ultralytics) -->
+  <!-- Optional: MediaPipe (install separately: pip install mediapipe) -->
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
